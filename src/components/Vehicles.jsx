@@ -5,7 +5,7 @@ import TableComponent from "./TableComponent";
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import AwesomeCard from "./AwesomeCard";
-
+import {ArrowUpIcon,ArrowDownIcon} from '@heroicons/react/24/outline'
 function Vehicles() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -148,7 +148,14 @@ function Vehicles() {
       // Handle error
     }
   };
-
+  const sortAsc=(key)=>{
+    setData(data.sort((a,b)=>a.key-b.key))
+  }
+  const sortDesc=(key)=>{
+    console.log(key);
+    console.log(data[0]);
+    setData(data.sort((a,b)=>b.key-a.key))
+  }
   const renderPagination = () => {
     return (
       <div className="flex justify-center my-4 text-sm">
@@ -205,8 +212,9 @@ function Vehicles() {
             {/* Table header */}
             <thead>
               <tr className="bg-[#EDEEF3] h-12">
-                <th className="text-[#092468] px-4 py-2 text-start">
+                <th className="text-[#092468] px-4 py-2 text-start flex">
                   Model Name
+                   {/* <ArrowUpIcon onClick={()=>sortDesc('modelName')} className="h-5"/><ArrowDownIcon onClick={()=>sortAsc("modelName")} className="h-5"/> */}
                 </th>
                 <th className="text-[#092468] px-4 py-2 text-start">Price</th>
                 <th className="text-[#092468] px-4 py-2 text-start">Owner</th>
