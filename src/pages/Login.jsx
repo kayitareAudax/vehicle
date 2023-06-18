@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_URL from '../utils/api';
 import { ToastContainer, toast } from 'react-toastify';
@@ -18,6 +18,11 @@ const Login = () => {
   const handleEmail=(e)=>{
     setEmail(e.target.value)
   }
+  useEffect(()=>{
+    if(localStorage.getItem("token")){
+      navigate("/dashboard")
+    }
+  })
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {

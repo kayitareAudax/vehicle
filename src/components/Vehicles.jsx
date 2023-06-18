@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import API_URL from '../utils/api';
-import TableComponent from './TableComponent';
-import { useNavigate } from 'react-router';
-import { ToastContainer, toast } from 'react-toastify';
-import AwesomeCard from './AwesomeCard';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import API_URL from "../utils/api";
+import TableComponent from "./TableComponent";
+import { useNavigate } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import AwesomeCard from "./AwesomeCard";
 
 function Vehicles() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage,setItemsPerPage] = useState(2);
-  const [totalPages,setTotalPages]=useState()
+  const [itemsPerPage, setItemsPerPage] = useState(2);
+  const [totalPages, setTotalPages] = useState();
   const [selectedItem, setSelectedItem] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [chasis,setChasis]=useState("");
-  const [plateNumber,setPlateNumber]=useState("");
-  const [manufactureCompany,setManufactureCompany]=useState("");
-  const [manufactureYear,setManufactureYear]=useState("");
-  const [price,setPrice]=useState(0);
-  const [modelName,setModelName]=useState("");
-  const navigate=useNavigate();
-  useEffect(()=>{
-    if(!localStorage.getItem("token")){
-      return navigate("/login")
+  const [chasis, setChasis] = useState("");
+  const [plateNumber, setPlateNumber] = useState("");
+  const [manufactureCompany, setManufactureCompany] = useState("");
+  const [manufactureYear, setManufactureYear] = useState("");
+  const [price, setPrice] = useState(0);
+  const [modelName, setModelName] = useState("");
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      return navigate("/login");
     }
-  },[])
+  }, []);
   let config = {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
@@ -32,7 +32,7 @@ function Vehicles() {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [itemsPerPage]);
   const handleEdit = (item) => {
     setSelectedItem(item);
   };
@@ -40,7 +40,7 @@ function Vehicles() {
   const handleDelete = async (itemId) => {
     console.log(itemId);
     try {
-      const resp=await axios.delete(`/vehicle/${itemId}`,config);
+      const resp = await axios.delete(`/vehicle/${itemId}`, config);
       console.log(resp.data);
       setData(data.filter((item) => item._id !== itemId));
     } catch (error) {
@@ -53,10 +53,19 @@ function Vehicles() {
   };
 
   const handleSave = async (updatedItem) => {
+    console.log(updatedItem);
     try {
       // Make an API request to save/update the item's data
-      const response = await axios.put(`${API_URL}/vehicle/${updatedItem.id}`, updatedItem);
-      const updatedData = data.map((item) => (item.id === updatedItem.id ? response.data : item));
+      const response = await axios.put(
+        `/vehicle/update/${updatedItem._id}`,
+        updatedItem,
+        config
+      );
+      console.log(response.data.data);
+      const updatedData = data.map((item) =>
+        item._id === updatedItem._id ? response.data.data : item
+      );
+      console.log("updated", updatedData);
       setData(updatedData);
       handleModalClose();
     } catch (error) {
@@ -72,32 +81,44 @@ function Vehicles() {
     setShowPopup(false);
   };
 
-  const handleCarAdded = async() => {
-    const body={chasis,modelName,manufactureCompany,price,manufactureYear,plateNumber};
-    const resp=await axios.post("/vehicle/",body,config);
-    if(!resp.data.success){
-      toast(resp.data.message,{
-        position:'top-right',
-        closeOnClick:true,
-        hideProgressBar:false
-      })
-    }
-    else{
+  const handleCarAdded = async () => {
+    const body = {
+      chasis,
+      modelName,
+      manufactureCompany,
+      price,
+      manufactureYear,
+      plateNumber,
+    };
+    const resp = await axios.post("/vehicle/", body, config);
+    if (!resp.data.success) {
+      toast(resp.data.message, {
+        position: "top-right",
+        closeOnClick: true,
+        hideProgressBar: false,
+      });
+    } else {
       console.log(resp.data.data);
-      setData([...data,resp.data.data ]);
+      setData([...data, resp.data.data]);
       handlePopupClose();
     }
-    
   };
   const fetchData = async () => {
     try {
-      const res = await axios.get(`/vehicle?page=1&limit=${itemsPerPage}`, config);
+      const res = await axios.get(
+        `/vehicle?page=1&limit=${itemsPerPage}`,
+        config
+      );
       const { data } = res;
       if (data.success) {
         setData(data.data);
         setTotalPages(data.totalPages); // Set the total number of pages
       } else {
-        toast(data.message, { position: 'top-right', closeOnClick: true, hideProgressBar: false });
+        toast(data.message, {
+          position: "top-right",
+          closeOnClick: true,
+          hideProgressBar: false,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -107,13 +128,20 @@ function Vehicles() {
 
   const handlePageChange = async (pageNumber) => {
     try {
-      const res = await axios.get(`/vehicle?page=${pageNumber}&limit=${itemsPerPage}`, config);
+      const res = await axios.get(
+        `/vehicle?page=${pageNumber}&limit=${itemsPerPage}`,
+        config
+      );
       const { data } = res;
       if (data.success) {
         setData(data.data);
         setCurrentPage(pageNumber);
       } else {
-        toast(data.message, { position: 'top-right', closeOnClick: true, hideProgressBar: false });
+        toast(data.message, {
+          position: "top-right",
+          closeOnClick: true,
+          hideProgressBar: false,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -132,15 +160,19 @@ function Vehicles() {
             Prev
           </button>
         )}
-        {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-          <button
-            key={page}
-            className={`rounded px-3 py-1 ${currentPage === page ? 'bg-[#092468] text-white' : ''}`}
-            onClick={() => handlePageChange(page)}
-          >
-            {page}
-          </button>
-        ))}
+        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+          (page) => (
+            <button
+              key={page}
+              className={`rounded px-3 py-1 ${
+                currentPage === page ? "bg-[#092468] text-white" : ""
+              }`}
+              onClick={() => handlePageChange(page)}
+            >
+              {page}
+            </button>
+          )
+        )}
         {currentPage < totalPages && (
           <button
             className="rounded px-3 py-1 bg-[#092468] text-white"
@@ -149,14 +181,11 @@ function Vehicles() {
             Next
           </button>
         )}
+        <input value={itemsPerPage} type="number" onChange={(e)=>setItemsPerPage(e.target.value)} className="text-center w-7 py-2 text-black border rounded ml-2"/>
       </div>
     );
   };
 
-
-  
-  
-  
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-center">
@@ -164,7 +193,7 @@ function Vehicles() {
           History of Registered cars and their owners
         </p>
         <button
-          className="bg-[#092468] text-white py-2 px-6 rounded text-sm"
+          className="bg-mainColor text-white py-2 px-6 rounded text-sm"
           onClick={handlePopupOpen}
         >
           New Car
@@ -176,28 +205,43 @@ function Vehicles() {
             {/* Table header */}
             <thead>
               <tr className="bg-[#EDEEF3] h-12">
-                <th className="text-[#092468] px-4 py-2 text-start">Model Name</th>
+                <th className="text-[#092468] px-4 py-2 text-start">
+                  Model Name
+                </th>
                 <th className="text-[#092468] px-4 py-2 text-start">Price</th>
                 <th className="text-[#092468] px-4 py-2 text-start">Owner</th>
-                <th className="text-[#092468] px-4 py-2 text-start">Manufacture Year</th>
-                <th className="text-[#092468] px-4 py-2 text-start">Manufacture Company</th>
+                <th className="text-[#092468] px-4 py-2 text-start">
+                  Manufacture Year
+                </th>
+                <th className="text-[#092468] px-4 py-2 text-start">
+                  Manufacture Company
+                </th>
                 <th className="text-[#092468] px-4 py-2 text-start">Actions</th>
               </tr>
             </thead>
             {/* Table body */}
             <tbody>
               {data.map((item) => (
-                <tr className="bg-[#434343] bg-opacity-[3%] border border-gray-100" key={item.id}>
+                <tr
+                  className="bg-[#434343] bg-opacity-[3%] border border-gray-100"
+                  key={item.id}
+                >
                   <td className="px-4 py-2">{item.modelName}</td>
                   <td className="px-4 py-2">{item.price}</td>
                   <td className="px-4 py-2">{item?.owner?.names}</td>
                   <td className="px-4 py-2">{item.manufactureYear}</td>
                   <td className="px-4 py-2">{item.manufactureCompany}</td>
                   <td className="px-4 py-2">
-                    <button className="text-blue-500 underline mr-2" onClick={() => handleEdit(item)}>
+                    <button
+                      className="text-blue-500 underline mr-2"
+                      onClick={() => handleEdit(item)}
+                    >
                       Edit
                     </button>
-                    <button className="text-red-500 underline" onClick={() => handleDelete(item._id)}>
+                    <button
+                      className="text-red-500 underline"
+                      onClick={() => handleDelete(item._id)}
+                    >
                       Delete
                     </button>
                   </td>
@@ -213,17 +257,98 @@ function Vehicles() {
       {selectedItem && (
         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           {/* Modal content */}
-          <div className="bg-white w-full sm:w-[35vw] md:w-[40vw] h-[60vh] p-4 rounded shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center">Edit Item</h2>
+          <div className="bg-white w-full sm:w-[35vw] md:w-[40vw] h-[64vh] p-4 rounded shadow-lg">
+            <h2 className="text-lg font-semibold mb-4 text-center">
+              Edit Item
+            </h2>
             <div className="space-y-4 flex flex-col mb-2">
               {/* Input fields */}
               <input
                 type="text"
                 value={selectedItem.modelName}
                 placeholder="Model Name"
-                onChange={(e) => setSelectedItem({ ...selectedItem, modelName: e.target.value })}
+                onChange={(e) =>
+                  setSelectedItem({
+                    ...selectedItem,
+                    modelName: e.target.value,
+                  })
+                }
                 className="border border-gray-300 rounded px-2 py-2"
               />
+              <input
+                type="text"
+                value={selectedItem.chasis}
+                placeholder="Chasis Number"
+                onChange={(e) =>
+                  setSelectedItem({
+                    ...selectedItem,
+                    chasis: e.target.value,
+                  })
+                }
+                className="border border-gray-300 rounded px-2 py-2"
+              />
+              <input
+                type="text"
+                value={selectedItem.manufactureCompany}
+                placeholder="Manufacture Company"
+                onChange={(e) =>
+                  setSelectedItem({
+                    ...selectedItem,
+                    manufactureCompany: e.target.value,
+                  })
+                }
+                className="border border-gray-300 rounded px-2 py-2"
+              />
+              <input
+                type="text"
+                value={selectedItem.manufactureYear}
+                placeholder="Manufacture Year"
+                onChange={(e) =>
+                  setSelectedItem({
+                    ...selectedItem,
+                    manufactureYear: e.target.value,
+                  })
+                }
+                className="border border-gray-300 rounded px-2 py-2"
+              />
+              <input
+                type="text"
+                value={selectedItem.plateNumber}
+                placeholder="Model Name"
+                onChange={(e) =>
+                  setSelectedItem({
+                    ...selectedItem,
+                    plateNumber: e.target.value,
+                  })
+                }
+                className="border border-gray-300 rounded px-2 py-2"
+              />
+              <input
+                type="number"
+                value={selectedItem.price}
+                placeholder="Model Name"
+                onChange={(e) =>
+                  setSelectedItem({
+                    ...selectedItem,
+                    price: e.target.value,
+                  })
+                }
+                className="border border-gray-300 rounded px-2 py-2"
+              />
+              <div className="flex justify-end">
+                <button
+                  className="bg-mainColor text-white py-2 px-4 rounded mr-2"
+                  onClick={() => handleSave(selectedItem)}
+                >
+                  Save
+                </button>
+                <button
+                  className="bg-gray-500 text-white py-2 px-4 rounded"
+                  onClick={()=>setSelectedItem(null)}
+                >
+                  Cancel
+                </button>
+              </div>
               {/* Other input fields */}
             </div>
             {/* Save and Cancel buttons */}
@@ -246,6 +371,48 @@ function Vehicles() {
                 placeholder="Model Name"
                 className="border border-gray-300 rounded px-2 py-2 outline-none"
               />
+              <input
+                type="text"
+                value={chasis}
+                onChange={(e) => setChasis(e.target.value)}
+                placeholder="Chasis number"
+                className="border border-gray-300 rounded px-2 py-2 outline-none"
+              />
+              <input
+                type="text"
+                value={plateNumber}
+                onChange={(e) => setPlateNumber(e.target.value)}
+                placeholder="Plate Number"
+                className="border border-gray-300 rounded px-2 py-2 outline-none"
+              />
+              <input
+                type="text"
+                value={manufactureCompany}
+                onChange={(e) => setManufactureCompany(e.target.value)}
+                placeholder="Manufacture Company"
+                className="border border-gray-300 rounded px-2 py-2 outline-none"
+              />
+              <input
+                type="text"
+                value={manufactureYear}
+                onChange={(e) => setManufactureYear(e.target.value)}
+                placeholder="Manufacture Year"
+                className="border border-gray-300 rounded px-2 py-2 outline-none"
+              />
+              <div className="flex justify-end">
+                <button
+                  className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
+                  onClick={handleCarAdded}
+                >
+                  Save
+                </button>
+                <button
+                  className="bg-gray-500 text-white py-2 px-4 rounded"
+                  onClick={handlePopupClose}
+                >
+                  Cancel
+                </button>
+              </div>
               {/* Other input fields */}
             </div>
             {/* Save and Cancel buttons */}
@@ -254,6 +421,5 @@ function Vehicles() {
       )}
     </div>
   );
-
 }
-export default Vehicles
+export default Vehicles;

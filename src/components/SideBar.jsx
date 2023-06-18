@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { TruckIcon, UserGroupIcon, ChartBarIcon, ArrowRightOnRectangleIcon,Bars3Icon } from '@heroicons/react/24/outline'
 import SideLink from './SideLink'
+import rra from '../assets/rra2.png'
 const SideBar = () => {
   const navigate=useNavigate()
   const handleLogout=async()=>{
@@ -11,8 +12,9 @@ const SideBar = () => {
   return (
     <div className='h-screen w-full iphone:h-[10%] sm:w-[13%] mr-2 bg-[#F5F5F5] flex flex-col'>
       <Bars3Icon className='h-0 w-0 text-secondColor'/>
-      <div className='logo mt-6 mb-4'>
-        <p className='text-[30px] text-secondColor font-bold text-center items-center'>E-vehicle</p>
+      <div className='logo m-auto h-[70px]'>
+        {/* <p className='text-[30px] text-secondColor font-bold text-center items-center'>E-vehicle</p> */}
+        <img src={rra} className='object-cover h-full'/>
       </div>
       <div className='sideLinks flex flex-col flex-grow'>
         <SideLink text={"Dashboard"} icon={ChartBarIcon} to={'/dashboard'} />
