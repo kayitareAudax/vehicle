@@ -18,7 +18,7 @@ const SideBar = () => {
       </div>
       <div className='sideLinks flex flex-col flex-grow'>
         <SideLink text={"Dashboard"} icon={ChartBarIcon} to={'/dashboard'} />
-        <SideLink text={"Vehicles"} icon={TruckIcon} to={'/vehicles'} current={true} />
+        <SideLink text={"Vehicles"} icon={TruckIcon} to={'/vehicles'}/>
         <SideLink text={"Owners"} icon={UserGroupIcon} to={"/owners"} />
         <div className='flex-grow' />
         <div className='flex items-center justify-end px-4 mb-2 iphone:justify-center'>
