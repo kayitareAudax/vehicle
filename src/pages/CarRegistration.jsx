@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import CarPost from '../components/CarPost'
 import { useNavigate } from 'react-router-dom';
 import SideBar from '../components/SideBar';
-import Vehicles from '../components/Vehicles';
+import Vehicles from '../components/Employees';
 
 function CarRegistration() {
   const navigate = useNavigate();

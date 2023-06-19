@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import SideBar from '../components/SideBar';
 import Home from '../components/Home';
 import Employees from '../components/Employees';
+import Laptops from '../components/Laptops';
 
-function Dashboard() {
+function LaptopsPage() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token")
   useEffect(()=>{
@@ -20,10 +21,10 @@ function Dashboard() {
       <SideBar/>
         <div className='mt-12 w-[85%]'>
           {/* <h1 className='mb-12'>Welcome, <span className='font-bold'>Nick</span></h1> */}
-            <Employees/>
+            <Laptops/>
         </div>
     </div>
   )
 }
 
-export default Dashboard
+export default LaptopsPage

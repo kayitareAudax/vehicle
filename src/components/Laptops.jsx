@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import API_URL from "../utils/api";
-import TableComponent from "./TableComponent";
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import AwesomeCard from "./AwesomeCard";
 import {ArrowUpIcon,ArrowDownIcon} from '@heroicons/react/24/outline'
-function Vehicles() {
+function Laptops() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(2);
   const [totalPages, setTotalPages] = useState();
   const [selectedItem, setSelectedItem] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [chasis, setChasis] = useState("");
-  const [plateNumber, setPlateNumber] = useState("");
-  const [manufactureCompany, setManufactureCompany] = useState("");
-  const [manufactureYear, setManufactureYear] = useState("");
-  const [price, setPrice] = useState(0);
-  const [modelName, setModelName] = useState("");
+  const [model,setModel]=useState("");
+  const [serialNumber,setSerialNumber]=useState("");
+  const [manufacturer,setManufacturer]=useState("")
   const navigate = useNavigate();
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -81,16 +77,13 @@ function Vehicles() {
     setShowPopup(false);
   };
 
-  const handleCarAdded = async () => {
+  const handleLaptopAdded = async () => {
     const body = {
-      chasis,
-      modelName,
-      manufactureCompany,
-      price,
-      manufactureYear,
-      plateNumber,
+      model,
+      manufacturer,
+      serialNumber
     };
-    const resp = await axios.post("/vehicle/", body, config);
+    const resp = await axios.post("/laptop/", body, config);
     if (!resp.data.success) {
       toast(resp.data.message, {
         position: "top-right",
@@ -98,20 +91,22 @@ function Vehicles() {
         hideProgressBar: false,
       });
     } else {
-      console.log(resp.data.data);
-      setData([...data, resp.data.data]);
+      console.log(resp.data);
+      setData([...data, resp.data.laptop]);
       handlePopupClose();
     }
   };
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        `/vehicle?page=1&limit=${itemsPerPage}`,
+        `/laptop?page=1&limit=${itemsPerPage}`,
         config
       );
+
       const { data } = res;
+      console.log(data);
       if (data.success) {
-        setData(data.data);
+        setData(data.laptops);
         setTotalPages(data.totalPages); // Set the total number of pages
       } else {
         toast(data.message, {
@@ -129,12 +124,13 @@ function Vehicles() {
   const handlePageChange = async (pageNumber) => {
     try {
       const res = await axios.get(
-        `/vehicle?page=${pageNumber}&limit=${itemsPerPage}`,
+        `/laptop?page=${pageNumber}&limit=${itemsPerPage}`,
         config
       );
       const { data } = res;
+      console.log(data);
       if (data.success) {
-        setData(data.data);
+        setData(data.laptops);
         setCurrentPage(pageNumber);
       } else {
         toast(data.message, {
@@ -197,13 +193,13 @@ function Vehicles() {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-center">
         <p className="text-gray-500 text-sm font-semibold mb-2 sm:mb-0">
-          History of Registered cars and their owners
+          Registered Laptops
         </p>
         <button
-          className="bg-mainColor text-white py-2 px-6 rounded text-sm"
+          className="bg-[#092468] text-white py-2 px-6 rounded text-sm"
           onClick={handlePopupOpen}
         >
-          New Car
+          New Laptop
         </button>
       </div>
       <div className="container mx-auto mt-2">
@@ -212,17 +208,10 @@ function Vehicles() {
             {/* Table header */}
             <thead>
               <tr className="bg-[#EDEEF3] h-12">
-                <th className="text-[#092468] px-4 py-2 text-start flex">
-                  Model Name
-                   {/* <ArrowUpIcon onClick={()=>sortDesc('modelName')} className="h-5"/><ArrowDownIcon onClick={()=>sortAsc("modelName")} className="h-5"/> */}
-                </th>
-                <th className="text-[#092468] px-4 py-2 text-start">Price</th>
-                <th className="text-[#092468] px-4 py-2 text-start">Owner</th>
+                <th className="text-[#092468] px-4 py-2 text-start">Manufacturer</th>
+                <th className="text-[#092468] px-4 py-2 text-start">model</th>
                 <th className="text-[#092468] px-4 py-2 text-start">
-                  Manufacture Year
-                </th>
-                <th className="text-[#092468] px-4 py-2 text-start">
-                  Manufacture Company
+                  serial Number
                 </th>
                 <th className="text-[#092468] px-4 py-2 text-start">Actions</th>
               </tr>
@@ -234,11 +223,9 @@ function Vehicles() {
                   className="bg-[#434343] bg-opacity-[3%] border border-gray-100"
                   key={item.id}
                 >
-                  <td className="px-4 py-2">{item.modelName}</td>
-                  <td className="px-4 py-2">{item.price}</td>
-                  <td className="px-4 py-2">{item?.owner?.names}</td>
-                  <td className="px-4 py-2">{item.manufactureYear}</td>
-                  <td className="px-4 py-2">{item.manufactureCompany}</td>
+                  <td className="px-4 py-2">{item.manufacturer}</td>
+                  <td className="px-4 py-2">{item.model}</td>
+                  <td className="px-4 py-2">{item.serial_number}</td>
                   <td className="px-4 py-2">
                     <button
                       className="text-blue-500 underline mr-2"
@@ -368,49 +355,35 @@ function Vehicles() {
       {showPopup && (
         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           {/* Popup content */}
-          <div className="bg-white w-full sm:w-[35vw] md:w-[40vw] iphone:w-full h-[65vh] p-8 rounded shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center">New Car</h2>
+          <div className="bg-white w-full sm:w-[35vw] md:w-[40vw] iphone:w-full h-[50vh] p-8 rounded shadow-lg">
+            <h2 className="text-lg font-semibold mb-4 text-center">New Laptop</h2>
             <div className="space-y-4 flex flex-col mb-2">
               {/* Input fields */}
               <input
                 type="text"
-                value={modelName}
-                onChange={(e) => setModelName(e.target.value)}
-                placeholder="Model Name"
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                placeholder="Model"
                 className="border border-gray-300 rounded px-2 py-2 outline-none"
               />
               <input
                 type="text"
-                value={chasis}
-                onChange={(e) => setChasis(e.target.value)}
-                placeholder="Chasis number"
+                value={manufacturer}
+                onChange={(e) => setManufacturer(e.target.value)}
+                placeholder="Manufacturer"
                 className="border border-gray-300 rounded px-2 py-2 outline-none"
               />
               <input
                 type="text"
-                value={plateNumber}
-                onChange={(e) => setPlateNumber(e.target.value)}
-                placeholder="Plate Number"
-                className="border border-gray-300 rounded px-2 py-2 outline-none"
-              />
-              <input
-                type="text"
-                value={manufactureCompany}
-                onChange={(e) => setManufactureCompany(e.target.value)}
-                placeholder="Manufacture Company"
-                className="border border-gray-300 rounded px-2 py-2 outline-none"
-              />
-              <input
-                type="text"
-                value={manufactureYear}
-                onChange={(e) => setManufactureYear(e.target.value)}
-                placeholder="Manufacture Year"
+                value={serialNumber}
+                onChange={(e) => setSerialNumber(e.target.value)}
+                placeholder="Serial Number"
                 className="border border-gray-300 rounded px-2 py-2 outline-none"
               />
               <div className="flex justify-end">
                 <button
                   className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
-                  onClick={handleCarAdded}
+                  onClick={handleLaptopAdded}
                 >
                   Save
                 </button>
@@ -430,4 +403,4 @@ function Vehicles() {
     </div>
   );
 }
-export default Vehicles;
+export default Laptops;

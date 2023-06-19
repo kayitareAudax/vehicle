@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_URL from '../utils/api';
-import TableComponent from './TableComponent';
 import { toast } from 'react-toastify';
 
 function Home() {

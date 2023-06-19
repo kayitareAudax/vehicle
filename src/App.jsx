@@ -1,12 +1,10 @@
 import './App.css'
 import Login from './pages/Login'
-import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
-import CarRegistration from './pages/CarRegistration'
-
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import OwnerPage from './pages/OwnerPage'
 import axios from 'axios'
+import NewEmployee from './pages/NewEmployee';
+import LaptopsPage from './pages/LaptopsPage';
 function App() {
   axios.defaults.baseURL='http://localhost:5000'
   return (
@@ -16,10 +14,9 @@ function App() {
         <Routes>
           <Route path="/" exact element={<Login />} />
           <Route path="/login" exact element={<Login />} />
-          <Route path="/signup" exact element={<Signup />} />
           <Route path="/dashboard" exact element={<Dashboard />} />
-          <Route path="/vehicles" exact element={<CarRegistration />} />
-          <Route path='/owners' exact element={<OwnerPage/>}/>
+          <Route path="/new" exact element={<NewEmployee />} />
+          <Route path='/laptop' exact element={<LaptopsPage/>}/>
         </Routes>
       </Router>
     </div>
