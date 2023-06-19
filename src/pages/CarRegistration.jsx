@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import CarPost from '../components/CarPost'
 import { useNavigate } from 'react-router-dom';
 import SideBar from '../components/SideBar';
-import Vehicles from '../components/Employees';
+import Employees from '../components/Employees';
 
 function CarRegistration() {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ function CarRegistration() {
     <div className='flex flex-row w-screen iphone:flex-col'>
       <SideBar/>
         <div className='mt-12 w-[85%] iphone:w-full'>
-            <Vehicles/>
+            <Employees/>
         </div>
     </div>
   )

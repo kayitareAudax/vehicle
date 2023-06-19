@@ -11,7 +11,7 @@ export default {
         md: '768px',
         lg: '1024px',
         xl: '1280px',
-        iphone: {max:'385px',},
+        iphone: {max:'525px',},
       },
       colors: {
         mainColor: '#FF5353',

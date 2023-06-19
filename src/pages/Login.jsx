@@ -82,7 +82,6 @@ const Login = () => {
           <CustomInput inputType={'text'} label={"Email"} value={email} handleChange={handleEmail}/>
           <CustomInput inputType={'password'} label={"Password"} value={password} handleChange={handlePassword}/> 
           <CustomButton text={"Login"} handleSubmit={handleSubmit} />
-          <p className='mt-2 text-right'>Don't have an account? <Link className='text-mainColor' to={'/signup'}>Signup</Link> </p> 
         </form>
       </div>
 

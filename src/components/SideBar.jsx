@@ -14,13 +14,13 @@ const SideBar = () => {
     setShowSidebar(!showSidebar);
   }
   return (
-    <div className={`h-screen w-full  sm:w-[13%] ${showSidebar?'iphone:max-h-[30vh] transition-all':'iphone:h-[5vh] transition-all'} mr-2 bg-[#F5F5F5] flex flex-col`}>
-      <Bars3Icon className={`hidden flex-shrink-0 iphone:flex h-6 w-6 text-secondColor ${showSidebar ? 'hidden' : 'flex'}`} onClick={handleClick} />
+    <div className={`h-screen iphone:h-[5vh] iphone:w-full  sm:w-[13%] ${showSidebar?'iphone:h-[40vh] transition-all':'iphone:h-[5vh] transition-all'} mr-2 bg-[#F5F5F5] flex flex-col`}>
+      <Bars3Icon className={`hidden mt-2 ml-2 flex-shrink-0 iphone:flex h-6 w-6 text-secondColor ${showSidebar ? 'hidden' : 'flex'}`} onClick={handleClick} />
       <div className={`logo m-auto h-[70px]`}>
         {/* <p className='text-[30px] text-secondColor font-bold text-center items-center'>E-vehicle</p> */}
         <img src={rtb} className='object-cover h-full iphone:h-0'/>
       </div>
-      <div className={`sideLinks flex flex-col mt-3 flex-grow ${showSidebar?'iphone:flex-col':'iphone:hidden'}`}>
+      <div className={`sideLinks flex flex-col mt-3 flex-grow ${showSidebar?'iphone:flex-col iphone:h-full':'iphone:hidden'}`}>
         <SideLink text={"Employees"} icon={UserGroupIcon} to={'/dashboard'} />
         <SideLink text={"Add new employee"} icon={PlusCircleIcon} to={'/new'}/>
         <SideLink text={"Laptops"} icon={ComputerDesktopIcon} to={'/laptop'}/>

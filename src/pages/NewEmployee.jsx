@@ -1,9 +1,7 @@
 import React,{useEffect,useState} from 'react'
 import Navbar from '../components/Navbar'
-import Vehicles from '../components/Employees'
 import { useNavigate } from 'react-router-dom';
 import SideBar from '../components/SideBar';
-import Home from '../components/Home';
 import Employees from '../components/Employees';
 import New from '../components/New';
 function Dashboard() {
@@ -15,10 +13,10 @@ function Dashboard() {
     }
   },[token])
   return (
-    <div className='flex flex-row w-screen'>
+    <div className='flex flex-row w-screen iphone:flex-col'>
       {/* <Navbar/> */}
       <SideBar/>
-        <div className='mt-5 w-[85%]'>
+        <div className='mt-12 w-[85%] iphone:w-[100%]'>
           {/* <h1 className='mb-12'>Welcome, <span className='font-bold'>Nick</span></h1> */}
             <New/>
         </div>

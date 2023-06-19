@@ -53,7 +53,7 @@ const New = () => {
         toast.success("Employee registered successfully");
         return navigator("/dashboard")
       } else {
-        toast.error("Employee registration failed");
+        toast.error(response.data.message)
       }
     } catch (error) {
       toast.error("An error occurred");
@@ -71,7 +71,7 @@ const New = () => {
         </h1>
         <form onSubmit={handleSubmit} className="w-full">
           <div className="flex flex-wrap -mx-2">
-            <div className="w-1/2 px-2 mb-6">
+            <div className="w-1/2 px-2 mb-6 iphone:w-full">
               <input
                 type="text"
                 id="firstName"
@@ -82,7 +82,7 @@ const New = () => {
               />
             </div>
 
-            <div className="w-1/2 px-2 mb-6">
+            <div className="w-1/2 iphone:w-full px-2 mb-6">
               <input
                 type="text"
                 id="lastName"
@@ -93,7 +93,7 @@ const New = () => {
               />
             </div>
 
-            <div className="w-1/2 px-2 mb-6">
+            <div className="w-1/2 px-2 iphone:w-full mb-6">
               <input
                 type="text"
                 id="nationalId"
@@ -104,7 +104,7 @@ const New = () => {
               />
             </div>
 
-            <div className="w-1/2 px-2 mb-6">
+            <div className="w-1/2 px-2 iphone:w-full mb-6">
               <input
                 type="text"
                 id="telephone"
@@ -115,7 +115,7 @@ const New = () => {
               />
             </div>
 
-            <div className="w-1/2 px-2 mb-6">
+            <div className="w-1/2 px-2 iphone:w-full mb-6">
               <input
                 type="text"
                 id="email"
@@ -126,7 +126,7 @@ const New = () => {
               />
             </div>
 
-            <div className="w-1/2 px-2 mb-6">
+            <div className="w-1/2 px-2 iphone:w-full mb-6">
               <input
                 type="text"
                 id="department"
@@ -137,7 +137,7 @@ const New = () => {
               />
             </div>
 
-            <div className="w-1/2 px-2 mb-6">
+            <div className="w-1/2 px-2 iphone:w-full mb-6">
               <input
                 type="text"
                 id="position"
@@ -148,14 +148,14 @@ const New = () => {
               />
             </div>
 
-            <div className="w-1/2 px-2 mb-6">
+            <div className="w-1/2 px-2  iphone:w-full mb-6">
               <select
                 id="laptop"
                 className="w-full px-6 py-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500 placeholder-black text-sm"
                 value={laptop}
                 onChange={(e) => setLaptop(e.target.value)}
               >
-                <option value="" selected={false}>Select a Laptop</option>
+                <option value="">Select a Laptop</option>
                 {laptops.map((laptop) => (
                   <option key={laptop.id} value={laptop.id}>
                     {laptop.manufacturer}-{laptop.model}
@@ -167,7 +167,7 @@ const New = () => {
 
           <button
             type="submit"
-            className="w-[30%] mb-6 flex justify-center bg-mainColor mx-auto text-sm px-4 py-3 text-white  rounded-3xl hover:bg-red-500"
+            className="w-[30%] mb-6 iphone:w-full flex justify-center bg-mainColor mx-auto text-sm px-4 py-3 text-white  rounded-3xl hover:bg-red-500"
             disabled={loading}
           >
             {loading ? "Registering employee..." : "Register Employee"}

@@ -3,7 +3,6 @@ import axios from "axios";
 import API_URL from "../utils/api";
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
-import AwesomeCard from "./AwesomeCard";
 import {ArrowUpIcon,ArrowDownIcon} from '@heroicons/react/24/outline'
 function Laptops() {
   const [data, setData] = useState([]);
@@ -33,41 +32,7 @@ function Laptops() {
     setSelectedItem(item);
   };
 
-  const handleDelete = async (itemId) => {
-    console.log(itemId);
-    try {
-      const resp = await axios.delete(`/vehicle/${itemId}`, config);
-      console.log(resp.data);
-      setData(data.filter((item) => item._id !== itemId));
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const handleModalClose = () => {
-    setSelectedItem(null);
-  };
-
-  const handleSave = async (updatedItem) => {
-    console.log(updatedItem);
-    try {
-      // Make an API request to save/update the item's data
-      const response = await axios.put(
-        `/vehicle/update/${updatedItem._id}`,
-        updatedItem,
-        config
-      );
-      console.log(response.data.data);
-      const updatedData = data.map((item) =>
-        item._id === updatedItem._id ? response.data.data : item
-      );
-      console.log("updated", updatedData);
-      setData(updatedData);
-      handleModalClose();
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handlePopupOpen = () => {
     setShowPopup(true);
@@ -107,6 +72,7 @@ function Laptops() {
       console.log(data);
       if (data.success) {
         setData(data.laptops);
+        console.log(data.laptops);
         setTotalPages(data.totalPages); // Set the total number of pages
       } else {
         toast(data.message, {
@@ -120,38 +86,6 @@ function Laptops() {
       // Handle error
     }
   };
-
-  const handlePageChange = async (pageNumber) => {
-    try {
-      const res = await axios.get(
-        `/laptop?page=${pageNumber}&limit=${itemsPerPage}`,
-        config
-      );
-      const { data } = res;
-      console.log(data);
-      if (data.success) {
-        setData(data.laptops);
-        setCurrentPage(pageNumber);
-      } else {
-        toast(data.message, {
-          position: "top-right",
-          closeOnClick: true,
-          hideProgressBar: false,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      // Handle error
-    }
-  };
-  const sortAsc=(key)=>{
-    setData(data.sort((a,b)=>a.key-b.key))
-  }
-  const sortDesc=(key)=>{
-    console.log(key);
-    console.log(data[0]);
-    setData(data.sort((a,b)=>b.key-a.key))
-  }
   const renderPagination = () => {
     return (
       <div className="flex justify-center my-4 text-sm">
@@ -188,7 +122,30 @@ function Laptops() {
       </div>
     );
   };
-
+  const handlePageChange = async (pageNumber) => {
+    try {
+      const res = await axios.get(
+        `/laptop?page=${pageNumber}&limit=${itemsPerPage}`,
+        config
+      );
+      const { data } = res;
+      console.log(data);
+      if (data.success) {
+        setData(data.laptops);
+        setCurrentPage(pageNumber);
+      } else {
+        toast(data.message, {
+          position: "top-right",
+          closeOnClick: true,
+          hideProgressBar: false,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      // Handle error
+    }
+  };
+ 
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-center">
@@ -196,7 +153,7 @@ function Laptops() {
           Registered Laptops
         </p>
         <button
-          className="bg-[#092468] text-white py-2 px-6 rounded text-sm"
+          className="bg-mainColor text-white py-2 px-6 rounded text-sm"
           onClick={handlePopupOpen}
         >
           New Laptop
@@ -213,7 +170,7 @@ function Laptops() {
                 <th className="text-[#092468] px-4 py-2 text-start">
                   serial Number
                 </th>
-                <th className="text-[#092468] px-4 py-2 text-start">Actions</th>
+                {/* <th className="text-[#092468] px-4 py-2 text-start">Action</th> */}
               </tr>
             </thead>
             {/* Table body */}
@@ -226,20 +183,6 @@ function Laptops() {
                   <td className="px-4 py-2">{item.manufacturer}</td>
                   <td className="px-4 py-2">{item.model}</td>
                   <td className="px-4 py-2">{item.serial_number}</td>
-                  <td className="px-4 py-2">
-                    <button
-                      className="text-blue-500 underline mr-2"
-                      onClick={() => handleEdit(item)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="text-red-500 underline"
-                      onClick={() => handleDelete(item._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -247,109 +190,6 @@ function Laptops() {
         </div>
         {renderPagination()}
       </div>
-
-      {/* Editing Modal */}
-      {selectedItem && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          {/* Modal content */}
-          <div className="bg-white w-full sm:w-[35vw] md:w-[40vw] h-[64vh] p-4 rounded shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center">
-              Edit Item
-            </h2>
-            <div className="space-y-4 flex flex-col mb-2">
-              {/* Input fields */}
-              <input
-                type="text"
-                value={selectedItem.modelName}
-                placeholder="Model Name"
-                onChange={(e) =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    modelName: e.target.value,
-                  })
-                }
-                className="border border-gray-300 rounded px-2 py-2"
-              />
-              <input
-                type="text"
-                value={selectedItem.chasis}
-                placeholder="Chasis Number"
-                onChange={(e) =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    chasis: e.target.value,
-                  })
-                }
-                className="border border-gray-300 rounded px-2 py-2"
-              />
-              <input
-                type="text"
-                value={selectedItem.manufactureCompany}
-                placeholder="Manufacture Company"
-                onChange={(e) =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    manufactureCompany: e.target.value,
-                  })
-                }
-                className="border border-gray-300 rounded px-2 py-2"
-              />
-              <input
-                type="text"
-                value={selectedItem.manufactureYear}
-                placeholder="Manufacture Year"
-                onChange={(e) =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    manufactureYear: e.target.value,
-                  })
-                }
-                className="border border-gray-300 rounded px-2 py-2"
-              />
-              <input
-                type="text"
-                value={selectedItem.plateNumber}
-                placeholder="Model Name"
-                onChange={(e) =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    plateNumber: e.target.value,
-                  })
-                }
-                className="border border-gray-300 rounded px-2 py-2"
-              />
-              <input
-                type="number"
-                value={selectedItem.price}
-                placeholder="Model Name"
-                onChange={(e) =>
-                  setSelectedItem({
-                    ...selectedItem,
-                    price: e.target.value,
-                  })
-                }
-                className="border border-gray-300 rounded px-2 py-2"
-              />
-              <div className="flex justify-end">
-                <button
-                  className="bg-mainColor text-white py-2 px-4 rounded mr-2"
-                  onClick={() => handleSave(selectedItem)}
-                >
-                  Save
-                </button>
-                <button
-                  className="bg-gray-500 text-white py-2 px-4 rounded"
-                  onClick={()=>setSelectedItem(null)}
-                >
-                  Cancel
-                </button>
-              </div>
-              {/* Other input fields */}
-            </div>
-            {/* Save and Cancel buttons */}
-          </div>
-        </div>
-      )}
 
       {/* Adding Popup */}
       {showPopup && (
@@ -400,6 +240,7 @@ function Laptops() {
           </div>
         </div>
       )}
+      
     </div>
   );
 }
