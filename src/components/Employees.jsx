@@ -97,7 +97,18 @@ function Employees() {
       console.log(error);
       // Handle error
     }
+
   };
+  const handleDelete=async(itemId)=>{
+    console.log(itemId);
+    try {
+      const resp=await axios.delete(`/employee/${itemId}`,config);
+      console.log(resp.data);
+      setData(data.filter((item) => item.id !== itemId));
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const renderPagination = () => {
     return (
       <div className="flex justify-center my-4 text-sm">
@@ -176,6 +187,9 @@ function Employees() {
                 <th className="text-[#092468] px-4 py-2 text-start">
                   serial
                 </th>
+                <th className="text-[#092468] px-4 py-2 text-start">
+                  action
+                </th>
               </tr>
             </thead>
             {/* Table body */}
@@ -195,6 +209,9 @@ function Employees() {
                   <td className="px-4 py-2 text-[12px]">{item.manufacturer}</td>
                   <td className="px-4 py-2 text-[12px]">{item.model}</td>
                   <td className="px-4 py-2 text-[12px]">{item.serial_number}</td>
+                  <button className="text-red-500 underline text-[12px] py-2" onClick={() => handleDelete(item.id)}>
+                    Delete
+                  </button>
                 </tr>
               ))}
             </tbody>
