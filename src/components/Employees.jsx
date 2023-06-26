@@ -18,11 +18,11 @@ function Employees() {
   const [price, setPrice] = useState(0);
   const [modelName, setModelName] = useState("");
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      return navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!localStorage.getItem("token")) {
+  //     return navigate("/login");
+  //   }
+  // }, []);
   let config = {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),

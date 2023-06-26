@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { TruckIcon, UserGroupIcon, ChartBarIcon, ArrowRightOnRectangleIcon,Bars3Icon, PlusCircleIcon, ComputerDesktopIcon } from '@heroicons/react/24/outline'
+import { TruckIcon, UserGroupIcon,ShoppingCartIcon,  ChartBarIcon, ArrowRightOnRectangleIcon,Bars3Icon, PlusCircleIcon, ComputerDesktopIcon, FolderOpenIcon } from '@heroicons/react/24/outline'
 import SideLink from './SideLink'
-import rtb from '../assets/rtb.png'
+import rtb from '../assets/shop1.png'
 const SideBar = () => {
   const [showSidebar,setShowSidebar]=useState(false);
   const navigate=useNavigate()
@@ -21,9 +21,9 @@ const SideBar = () => {
         <img src={rtb} className='object-cover h-full iphone:h-0'/>
       </div>
       <div className={`sideLinks flex flex-col mt-3 flex-grow ${showSidebar?'iphone:flex-col iphone:h-full':'iphone:hidden'}`}>
-        <SideLink text={"Employees"} icon={UserGroupIcon} to={'/dashboard'} />
-        <SideLink text={"Add new employee"} icon={PlusCircleIcon} to={'/new'}/>
-        <SideLink text={"Laptops"} icon={ComputerDesktopIcon} to={'/laptop'}/>
+        <SideLink text={"Products"} icon={FolderOpenIcon} to={'/dashboard'} />
+        <SideLink text={"Cart"} icon={ShoppingCartIcon} to={'/cart'}/>
+        <SideLink text={"Report"} icon={ChartBarIcon} to={'/report'}/>
         <div className='flex-grow' />
         <div className='flex items-center justify-end px-4 mb-2 iphone:justify-center'>
           <button className='py-2 bg-mainColor text-white px-2 rounded flex' onClick={handleLogout}>

@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import SideBar from '../components/SideBar';
 import Employees from '../components/Employees';
 import New from '../components/New';
-function Dashboard() {
+import CartScreen from './CartScreen';
+function Cart() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token")
   useEffect(()=>{
@@ -18,10 +19,10 @@ function Dashboard() {
       <SideBar/>
         <div className='mt-12 w-[85%] iphone:w-[100%]'>
           {/* <h1 className='mb-12'>Welcome, <span className='font-bold'>Nick</span></h1> */}
-            <New/>
+            <CartScreen/>
         </div>
     </div>
   )
 }
 
-export default Dashboard
+export default Cart
